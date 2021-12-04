@@ -1,0 +1,7 @@
+name: AFKPlusReconnect
+version: '${version}'
+main: net.lapismc.afkplusreconnect.AFKPlusReconnect
+api-version: 1.18
+depend: [ AFKPlus ]
+authors: [ Dart2112 ]
+description: Auto reconnect detection and mitigation
