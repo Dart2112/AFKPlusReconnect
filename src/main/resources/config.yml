@@ -6,8 +6,6 @@ Rejoin:
 Reaction:
   #If they can rejoin, how long do they have to prove they are really AFK
   TimeToAction: 10
-  #How many seconds must the players wait to rejoin after being allowed to join once
-  TimeToWait: 300
 #The command to run when the player fails to exit AFK after rejoining
 ActionCommand: "tempban {PLAYER} 30m Attempting AFK kick avoidance"
 
@@ -16,4 +14,4 @@ Messages:
   # Sent to the console when a player tries to join while AllowRejoin is enabled
   # Set to an empty string to disable the message if it is spamming your console
   KickConsole: "{PLAYER} was not allowed to join since they were just kicked for AFKing"
-  Rejoin: "&8[&6AFK&4+&8] &rYou have a few seconds to prove you arent AFK or you will be temp-banned for auto reconnecting"
+  Rejoin: "&8[&6AFK&4+&8] &3You have a few seconds to prove you arent AFK or you will be temp-banned for auto reconnecting"
