@@ -6,12 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class AFKPlusReconnect extends JavaPlugin implements Listener {
 
@@ -61,8 +62,8 @@ public final class AFKPlusReconnect extends JavaPlugin implements Listener {
                 //Set the player as AFK and add to allowed list
                 Bukkit.getScheduler().runTaskLater(this, () -> {
                     api.getPlayer(uuid).forceStartAFK();
-                    Bukkit.getPlayer(uuid).sendMessage(getConfig().getString("Messages.Rejoin",
-                            "You have a few seconds to prove you arent AFK or you will be temp-banned for auto reconnecting"));
+                    Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.Rejoin",
+                            "You have a few seconds to prove you arent AFK or you will be temp-banned for auto reconnecting")));
                 }, 10);
                 if (allowedPlayers.containsKey(uuid)) {
                     return;
@@ -103,14 +104,15 @@ public final class AFKPlusReconnect extends JavaPlugin implements Listener {
                         //The player has not left AFK and had been online too long
                         //Run the command from the config
                         String msg = getConfig().getString("ActionCommand",
-                                "tempban {PLAYER} 30m Attempting AFK kick avoidance")
+                                        "tempban {PLAYER} 30m Attempting AFK kick avoidance")
                                 .replace("{PLAYER}", Bukkit.getOfflinePlayer(uuid).getName());
                         Bukkit.getScheduler().runTask(this, () -> {
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), msg);
                         });
-                        actionedPlayers.remove(uuid);
-                        allowedPlayers.remove(uuid);
                     }
+                    //We need to remove them from lists, they've either been actioned again or left AFK
+                    actionedPlayers.remove(uuid);
+                    allowedPlayers.remove(uuid);
                 }
             }
         };
