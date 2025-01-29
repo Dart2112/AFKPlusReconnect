@@ -38,7 +38,7 @@ jobs:
           distribution: jetbrains
           java-version: 17
       - uses: gradle/actions/setup-gradle@v4
-      - run: ./gradlew build
+      - run: ./gradlew build shadowJar
       
       - uses: ncipollo/release-action@v1
         with:
