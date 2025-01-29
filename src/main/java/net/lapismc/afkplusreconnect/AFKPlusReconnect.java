@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -49,7 +48,7 @@ public final class AFKPlusReconnect extends JavaPlugin implements Listener {
             //Ignore them if they are in the allowed players list as that means they are about to be banned
             if (!Bukkit.getOfflinePlayer(uuid).isOnline() && !allowedPlayers.containsKey(uuid)) {
                 //The player is no longer online 1 tick after the action, so we can assume they were kicked
-                actionedPlayers.put(uuid, new Date().getTime());
+                actionedPlayers.put(uuid, System.currentTimeMillis());
             }
         }, 1);
     }
@@ -68,7 +67,7 @@ public final class AFKPlusReconnect extends JavaPlugin implements Listener {
                 if (allowedPlayers.containsKey(uuid)) {
                     return;
                 }
-                allowedPlayers.put(uuid, new Date().getTime());
+                allowedPlayers.put(uuid, System.currentTimeMillis());
             } else {
                 String msg = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Messages.Kick",
                         "&4You cannot rejoin as you were recently kicked for AFKing"));
@@ -88,7 +87,7 @@ public final class AFKPlusReconnect extends JavaPlugin implements Listener {
             //Clean Actioned Players
             long rejoinTimeToWait = getConfig().getInt("Rejoin.TimeToWait") * 1000L;
             for (UUID uuid : actionedPlayers.keySet()) {
-                long timeSinceAction = new Date().getTime() - actionedPlayers.get(uuid);
+                long timeSinceAction = System.currentTimeMillis() - actionedPlayers.get(uuid);
                 if (timeSinceAction > rejoinTimeToWait) {
                     //They've been offline long enough that we can stop monitoring them
                     actionedPlayers.remove(uuid);
@@ -98,7 +97,7 @@ public final class AFKPlusReconnect extends JavaPlugin implements Listener {
             //Check allowed players and kick if needed
             long reactionTimeToAction = getConfig().getInt("Reaction.TimeToAction") * 1000L;
             for (UUID uuid : allowedPlayers.keySet()) {
-                long timeSinceRejoin = new Date().getTime() - allowedPlayers.get(uuid);
+                long timeSinceRejoin = System.currentTimeMillis() - allowedPlayers.get(uuid);
                 if (timeSinceRejoin > reactionTimeToAction) {
                     if (api.getPlayer(uuid).isAFK()) {
                         //The player has not left AFK and had been online too long
